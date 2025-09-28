@@ -1,0 +1,21 @@
+# See https://git-scm.com/docs/gitignore for details on syntax
+# Node modules
+node_modules/
+# Composer vendor
+vendor/
+# Build output
+assets/build/
+# OS files
+.DS_Store
+Thumbs.db
+# IDE files
+.vscode/
+.idea/
+# Log files
+*.log
+# Environment files
+.env
+# PHPUnit cache
+.phpunit.result.cache
+# Playwright output
+playwright-report/
