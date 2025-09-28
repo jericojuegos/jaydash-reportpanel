@@ -8,46 +8,58 @@
  * Author URI: https://jericojuegos.com
  * License: GPLv2 or later
  */
+
+namespace JayDash\ReportPanel;
+
+if ( ! defined( 'ABSPATH' ) ) exit; // Prevent direct access
+
 use tangible\framework;
 use tangible\updater;
-
-define( 'JAYDASH_REPORTPANEL_VERSION', '0.1.2' );
 
 require __DIR__ . '/vendor/tangible/framework/index.php';
 require __DIR__ . '/vendor/tangible/updater/index.php';
 
-/**
- * Get plugin instance
- */
-function jaydash_reportpanel($instance = false) {
-  static $plugin;
-  return $plugin ? $plugin : ($plugin = $instance);
+class Plugin {
+    public static $plugin;
+    public $settings;
+
+    public function __construct() {
+        add_action( 'plugins_loaded', [ $this, 'init_framework' ] );
+        add_action( 'plugins_loaded', [ $this, 'init_updater' ], 11 );
+        add_action( 'plugins_loaded', [ $this, 'load_includes' ], 12 );
+    }
+
+    public function init_framework() {
+        if ( defined( 'WP_SANDBOX_SCRAPING' ) ) return;
+
+        self::$plugin = framework\register_plugin([
+            'name'           => 'jaydash-reportpanel',
+            'title'          => 'Jaydash Reportpanel',
+            'setting_prefix' => 'jaydash_reportpanel',
+            'version'        => '0.1.2',
+            'file_path'      => __FILE__,
+            'base_path'      => plugin_basename( __FILE__ ),
+            'dir_path'       => plugin_dir_path( __FILE__ ),
+            'url'            => plugins_url( '/', __FILE__ ),
+            'assets_url'     => plugins_url( '/assets', __FILE__ ),
+        ]);
+    }
+
+    public function init_updater() {
+        updater\register_plugin([
+            'name' => self::$plugin->name ?? 'jaydash-reportpanel',
+            'file' => __FILE__,
+        ]);
+    }
+
+    public function load_includes() {
+        require_once __DIR__ . '/includes/admin/settings.php';
+
+        // You can instantiate other classes here as needed
+        $this->settings = new \JayDash\ReportPanel\Admin\Settings(self::$plugin);
+    }
+
 }
 
-add_action('plugins_loaded', function() {
-
-  // See https://github.com/TangibleInc/framework/#note-on-plugin-activation
-  if (defined('WP_SANDBOX_SCRAPING')) return;
-
-  $plugin    = framework\register_plugin([
-    'name'           => 'jaydash-reportpanel',
-    'title'          => 'Jaydash Reportpanel',
-    'setting_prefix' => 'jaydash_reportpanel',
-    'version'        => JAYDASH_REPORTPANEL_VERSION,
-    'file_path' => __FILE__,
-    'base_path' => plugin_basename( __FILE__ ),
-    'dir_path' => plugin_dir_path( __FILE__ ),
-    'url' => plugins_url( '/', __FILE__ ),
-    'assets_url' => plugins_url( '/assets', __FILE__ ),
-  ]);
-
-  updater\register_plugin([
-    'name' => $plugin->name,
-    'file' => __FILE__,    
-  ]);
-
-  jaydash_reportpanel( $plugin );
-
-  require_once __DIR__.'/includes/index.php';
-
-}, 10);
+// Initialize the plugin
+new Plugin();
