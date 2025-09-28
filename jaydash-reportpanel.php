@@ -1,17 +1,17 @@
 <?php
 /**
  * Plugin Name: Jaydash Reportpanel
- * Plugin URI: https://tangibleplugins.com/jaydash-reportpanel
+ * Plugin URI: https://jericojuegos.com/jaydash-reportpanel
  * Description: 
- * Version: 0.1.1
- * Author: Team Tangible
- * Author URI: https://teamtangible.com
+ * Version: 0.1.2
+ * Author: Jerico Juegos
+ * Author URI: https://jericojuegos.com
  * License: GPLv2 or later
  */
 use tangible\framework;
 use tangible\updater;
 
-define( 'JAYDASH_REPORTPANEL_VERSION', '0.1.1' );
+define( 'JAYDASH_REPORTPANEL_VERSION', '0.1.2' );
 
 require __DIR__ . '/vendor/tangible/framework/index.php';
 require __DIR__ . '/vendor/tangible/updater/index.php';
